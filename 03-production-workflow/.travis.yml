@@ -1,0 +1,21 @@
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t <docker-id>/docker-react -f Dockerfile.dev .
+
+script:
+  - docker run -e CI=true <docker-id>/docker-react npm run test
+
+deploy:
+  provider: elasticbeanstalk
+  region: "<aws-region>"
+  app: "<app-name>"
+  env: "<environment-name>"
+  bucket-name: "<s3-bucket-name>"
+  bucker-path: "<app-name>"
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key: $AWS_SECRET_KEY
+  on:
+    branch: master
